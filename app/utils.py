@@ -26,3 +26,7 @@ def add_student(student):
 
 def update_by_id(id, student):
     return True
+
+
+def delete_by_id(id):
+    return True

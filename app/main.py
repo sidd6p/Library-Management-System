@@ -48,6 +48,7 @@ async def update_student_by_id(id: int, student: Optional[schemas.StudentUpdate]
     return {"message": "Hello Earth"}
 
 
-@app.delete("/students/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete("/students/{id}", status_code=status.HTTP_200_OK)
 async def delete_student_by_id(id: int):
+    delete_status = utils.delete_by_id(id)
     return {"message": "Hello Earth"}
