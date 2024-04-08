@@ -2,7 +2,6 @@ from fastapi import FastAPI, status, HTTPException, Depends, Query, Path
 
 from . import schemas, utils
 from .database import get_db
-from typing import List
 from typing import Optional
 
 from pymongo.database import Database
@@ -38,7 +37,7 @@ async def creates_students(
 @app.get(
     "/students",
     status_code=status.HTTP_200_OK,
-    response_model=List[schemas.StudentsSearchResponse],
+    response_model=dict,
     description="An API to find a list of students. You can apply filters on this API by passing the query parameters as listed below.",
 )
 async def list_students(

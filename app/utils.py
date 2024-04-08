@@ -23,8 +23,7 @@ async def search_students(db: Database, country: str = None, age: int = None):
     if age:
         query["age"] = {"$gte": age}
     result = db.students.find(query)
-    data = [student for student in result]
-
+    data = [SingleStudentSearchResponse(**student) for student in result]
     if len(data) == 0:
         return {"status": 0, "detail": "No record found!"}
 
