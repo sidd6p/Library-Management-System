@@ -2,6 +2,7 @@ from .schemas import (
     StudentCreate,
     SingleStudentSearchResponse,
     StudentUpdate,
+    StudentBaseModel,
 )
 from pymongo.database import Database
 from bson.objectid import ObjectId
@@ -23,7 +24,9 @@ async def search_students(db: Database, country: str = None, age: int = None):
     if age:
         query["age"] = {"$gte": age}
     result = db.students.find(query)
-    data = [SingleStudentSearchResponse(**student) for student in result]
+    print(result)
+    data = [StudentBaseModel(**student) for student in result]
+    print(result)
     if len(data) == 0:
         return {"status": 0, "detail": "No record found!"}
 
