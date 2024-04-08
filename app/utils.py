@@ -7,7 +7,10 @@ def search_students(country, age):
         {"name": "Alice", "age": 22},
         {"name": "Bob", "age": 25},
     ]
-    return [StudentsSearchResponse(**student) for student in dummy_data]
+    return {
+        "data": [StudentsSearchResponse(**student) for student in dummy_data],
+        "status": True,
+    }
 
 
 def search_students_by_id(id):
@@ -16,17 +19,17 @@ def search_students_by_id(id):
         "age": 25,
         "address": {"city": "Jalaun", "country": "India"},
     }
-    return dummy_data
+    return {"data": dummy_data, "status": True}
 
 
 def add_student(student):
     dummy_data = {"id": "123"}
-    return dummy_data
+    return {"data": dummy_data, "status": True}
 
 
 def update_by_id(id, student):
-    return True
+    return {"status": True}
 
 
 def delete_by_id(id):
-    return True
+    return {"status": True}
