@@ -8,8 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
-MONGO_DB_URL = f"mongodb+srv://{os.getenv('MONGO_USER')}:{os.getenv('MONGO_PASS')}@{os.getenv('MONGO_CLUSTER')}.mongodb.net/?retryWrites=true&w=majority"
+MONGO_DB_URL = f"mongodb+srv://{os.getenv('MONGO_USER')}:{os.getenv('MONGO_PASS')}@{os.getenv('MONGO_CLUSTER')}.mongodb.net/?retryWrites=true&w=majority&appName=LMS-Cluster"
 
 app = FastAPI()
 client = MongoClient(MONGO_DB_URL)

@@ -15,6 +15,7 @@ async def root(db: Database = Depends(get_db)):
         db.command("ping")
         return {"message": "Hello Earth"}
     except Exception as e:
+        print(e)
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Failed to connect to the database.",

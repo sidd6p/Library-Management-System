@@ -8,15 +8,12 @@ from bson.objectid import ObjectId
 
 
 async def add_student(student: StudentCreate, db: Database):
-    try:
-        student_data = student.model_dump()
-        result = db.students.insert_one(student_data)
-        if result.acknowledged:
-            return {"status": True, "data": {"id": str(result.inserted_id)}}
-        else:
-            return {"status": False}
-    finally:
-        await db.client.close()
+    student_data = student.model_dump()
+    result = db.students.insert_one(student_data)
+    if result.acknowledged:
+        return {"status": True, "data": {"id": str(result.inserted_id)}}
+    else:
+        return {"status": False}
 
 
 async def search_students(db: Database, country: str = None, age: int = None):
@@ -31,8 +28,6 @@ async def search_students(db: Database, country: str = None, age: int = None):
         return {"data": data, "status": True}
     except Exception as e:
         return {"status": False}
-    finally:
-        await db.client.close()
 
 
 async def search_students_by_id(student_id: str, db: Database):
@@ -45,8 +40,6 @@ async def search_students_by_id(student_id: str, db: Database):
             return {"status": False}
     except Exception as e:
         return {"status": False}
-    finally:
-        await db.client.close()
 
 
 async def update_by_id(student_id: str, student: StudentUpdate, db: Database):
@@ -63,8 +56,6 @@ async def update_by_id(student_id: str, student: StudentUpdate, db: Database):
             return {"status": False, "detail": "No valid fields to update"}
     except Exception as e:
         return {"status": False}
-    finally:
-        await db.client.close()
 
 
 async def delete_by_id(student_id: str, db: Database):
@@ -76,5 +67,3 @@ async def delete_by_id(student_id: str, db: Database):
             return {"status": False}
     except Exception as e:
         return {"status": False}
-    finally:
-        await db.client.close()
