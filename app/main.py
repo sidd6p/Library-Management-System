@@ -1,15 +1,24 @@
-from fastapi import FastAPI, status, HTTPException
+from fastapi import FastAPI, status, HTTPException, Depends
 from . import schemas, utils
+from .database import get_db
 from typing import List
 from typing import Optional
 
+from pymongo.database import Database
 
 app = FastAPI()
 
 
 @app.get("/", status_code=status.HTTP_200_OK)
-async def root():
-    return {"message": "Hello Earth"}
+async def root(db: Database = Depends(get_db)):
+    try:
+        db.command("ping")
+        return {"message": "Hello Earth"}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Failed to connect to the database.",
+        )
 
 
 @app.get(
@@ -17,8 +26,10 @@ async def root():
     status_code=status.HTTP_200_OK,
     response_model=List[schemas.StudentsSearchResponse],
 )
-async def get_students(country: str = None, age: int = None):
-    result = utils.search_students(country, age)
+async def get_students(
+    country: str = None, age: int = None, db: Database = Depends(get_db)
+):
+    result = await utils.search_students(db, country, age)
     if result["status"] == False:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -33,8 +44,8 @@ async def get_students(country: str = None, age: int = None):
     status_code=status.HTTP_200_OK,
     response_model=schemas.SingleStudentSearchResponse,
 )
-async def student_by_id(id: int):
-    result = utils.search_students_by_id(id)
+async def student_by_id(id: str, db: Database = Depends(get_db)):
+    result = await utils.search_students_by_id(id, db)
     if result["status"] == False:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -49,8 +60,8 @@ async def student_by_id(id: int):
     status_code=status.HTTP_201_CREATED,
     response_model=schemas.StudentCreateResponse,
 )
-async def put_students(student: schemas.StudentCreate):
-    result = utils.add_student(student)
+async def put_students(student: schemas.StudentCreate, db: Database = Depends(get_db)):
+    result = await utils.add_student(student, db)
     if result["status"] == False:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -61,8 +72,10 @@ async def put_students(student: schemas.StudentCreate):
 
 
 @app.patch("/students/{id}", status_code=status.HTTP_204_NO_CONTENT)
-async def update_student_by_id(id: int, student: Optional[schemas.StudentUpdate]):
-    result = utils.update_by_id(id, student)
+async def update_student_by_id(
+    id: str, student: Optional[schemas.StudentUpdate], db: Database = Depends(get_db)
+):
+    result = await utils.update_by_id(id, student, db)
     if result["status"] == False:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -71,8 +84,8 @@ async def update_student_by_id(id: int, student: Optional[schemas.StudentUpdate]
 
 
 @app.delete("/students/{id}", status_code=status.HTTP_200_OK)
-async def delete_student_by_id(id: int):
-    result = utils.delete_by_id(id)
+async def delete_student_by_id(id: str, db: Database = Depends(get_db)):
+    result = await utils.delete_by_id(id, db)
     if result["status"] == False:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

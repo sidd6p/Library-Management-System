@@ -1,35 +1,80 @@
-from .schemas import StudentsSearchResponse
+from .schemas import (
+    StudentCreate,
+    SingleStudentSearchResponse,
+    StudentUpdate,
+)
+from pymongo.database import Database
+from bson.objectid import ObjectId
 
 
-def search_students(country, age):
-    dummy_data = [
-        {"name": "John", "age": 20},
-        {"name": "Alice", "age": 22},
-        {"name": "Bob", "age": 25},
-    ]
-    return {
-        "data": [StudentsSearchResponse(**student) for student in dummy_data],
-        "status": True,
-    }
+async def add_student(student: StudentCreate, db: Database):
+    try:
+        student_data = student.model_dump()
+        result = db.students.insert_one(student_data)
+        if result.acknowledged:
+            return {"status": True, "data": {"id": str(result.inserted_id)}}
+        else:
+            return {"status": False}
+    finally:
+        await db.client.close()
 
 
-def search_students_by_id(id):
-    dummy_data = {
-        "name": "Siddhartha",
-        "age": 25,
-        "address": {"city": "Jalaun", "country": "India"},
-    }
-    return {"data": dummy_data, "status": True}
+async def search_students(db: Database, country: str = None, age: int = None):
+    try:
+        query = {}
+        if country:
+            query["address.country"] = country
+        if age is not None:
+            query["age"] = {"$gte": age}
+        result = db.students.find(query)
+        data = [student for student in result]
+        return {"data": data, "status": True}
+    except Exception as e:
+        return {"status": False}
+    finally:
+        await db.client.close()
 
 
-def add_student(student):
-    dummy_data = {"id": "123"}
-    return {"data": dummy_data, "status": True}
+async def search_students_by_id(student_id: str, db: Database):
+    try:
+        result = db.students.find_one({"_id": ObjectId(student_id)})
+        if result:
+            result["id"] = result["_id"]
+            return {"status": True, "data": SingleStudentSearchResponse(**result)}
+        else:
+            return {"status": False}
+    except Exception as e:
+        return {"status": False}
+    finally:
+        await db.client.close()
 
 
-def update_by_id(id, student):
-    return {"status": True}
+async def update_by_id(student_id: str, student: StudentUpdate, db: Database):
+    try:
+        update_data = student.model_dump(exclude_unset=True)
+        update_query = {}
+        update_query["$set"] = update_data
+
+        if update_query:
+            result = db.students.update_one({"_id": ObjectId(student_id)}, update_query)
+            if result.modified_count > 0:
+                return {"status": True}
+        else:
+            return {"status": False, "detail": "No valid fields to update"}
+    except Exception as e:
+        return {"status": False}
+    finally:
+        await db.client.close()
 
 
-def delete_by_id(id):
-    return {"status": True}
+async def delete_by_id(student_id: str, db: Database):
+    try:
+        result = db.students.delete_one({"_id": ObjectId(student_id)})
+        if result.deleted_count > 0:
+            return {"status": True}
+        else:
+            return {"status": False}
+    except Exception as e:
+        return {"status": False}
+    finally:
+        await db.client.close()
