@@ -6,10 +6,18 @@ class Address(BaseModel):
     country: str
 
 
-class StudentCreate(BaseModel):
+class StudentBaseModel(BaseModel):
     name: str
     age: int
-    address: Address
+
+
+class StudentSearchResponse(StudentBaseModel):
+    pass
+
+
+class StudentCreate(StudentBaseModel):
+    name: str
+    age: int
 
     class Config:
         schema_extra = {
@@ -21,5 +29,5 @@ class StudentCreate(BaseModel):
         }
 
 
-class StudentResponse(BaseModel):
+class StudentCreateResponse(BaseModel):
     id: str
