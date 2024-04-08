@@ -9,11 +9,16 @@ from pymongo.database import Database
 app = FastAPI()
 
 
-@app.get("/", status_code=status.HTTP_200_OK)
-async def root(db: Database = Depends(get_db)):
+@app.get("/app-check", status_code=status.HTTP_200_OK)
+async def app_check():
+    return {"message": "Hello Earth"}
+
+
+@app.get("/database-check", status_code=status.HTTP_200_OK)
+async def db_check(db: Database = Depends(get_db)):
     try:
         db.command("ping")
-        return {"message": "Hello Earth"}
+        return {"message": "DB conected"}
     except Exception as e:
         print(e)
         raise HTTPException(
