@@ -20,7 +20,6 @@ async def db_check(db: Database = Depends(get_db)):
         db.command("ping")
         return {"message": "DB conected"}
     except Exception as e:
-        print(e)
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Failed to connect to the database.",
@@ -35,14 +34,20 @@ async def db_check(db: Database = Depends(get_db)):
 async def get_students(
     country: str = None, age: int = None, db: Database = Depends(get_db)
 ):
-    result = await utils.search_students(db, country, age)
-    if result["status"] == False:
+    try:
+        result = await utils.search_students(db, country, age)
+        if result["status"] == False:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=result["detail"],
+            )
+        else:
+            return result["data"]
+    except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Error retrieving records!",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e),
         )
-    else:
-        return result["data"]
 
 
 @app.get(
@@ -51,14 +56,20 @@ async def get_students(
     response_model=schemas.SingleStudentSearchResponse,
 )
 async def student_by_id(id: str, db: Database = Depends(get_db)):
-    result = await utils.search_students_by_id(id, db)
-    if result["status"] == False:
+    try:
+        result = await utils.search_students_by_id(id, db)
+        if result["status"] == False:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=result["detail"],
+            )
+        else:
+            return result["data"]
+    except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Error retrieving record with id: {id}!",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e),
         )
-    else:
-        return result["data"]
 
 
 @app.post(
@@ -67,33 +78,51 @@ async def student_by_id(id: str, db: Database = Depends(get_db)):
     response_model=schemas.StudentCreateResponse,
 )
 async def put_students(student: schemas.StudentCreate, db: Database = Depends(get_db)):
-    result = await utils.add_student(student, db)
-    if result["status"] == False:
+    try:
+        result = await utils.add_student(student, db)
+        if result["status"] == False:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=result["detail"],
+            )
+        else:
+            return result["data"]
+    except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"Error adding the record!",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e),
         )
-    else:
-        return result["data"]
 
 
 @app.patch("/students/{id}", status_code=status.HTTP_204_NO_CONTENT)
 async def update_student_by_id(
     id: str, student: Optional[schemas.StudentUpdate], db: Database = Depends(get_db)
 ):
-    result = await utils.update_by_id(id, student, db)
-    if result["status"] == False:
+    try:
+        result = await utils.update_by_id(id, student, db)
+        if result["status"] == False:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=result["detail"],
+            )
+    except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail=f"Error updating record with id: {id}!",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e),
         )
 
 
 @app.delete("/students/{id}", status_code=status.HTTP_200_OK)
 async def delete_student_by_id(id: str, db: Database = Depends(get_db)):
-    result = await utils.delete_by_id(id, db)
-    if result["status"] == False:
+    try:
+        result = await utils.delete_by_id(id, db)
+        if result["status"] == False:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=result["detail"],
+            )
+    except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Error deleting record with id: {id}!",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e),
         )
