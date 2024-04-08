@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class StudentBaseModel(BaseModel):
@@ -22,14 +23,16 @@ class SingleStudentSearchResponse(StudentBaseModel):
 class StudentCreate(StudentBaseModel):
     address: Address
 
-    class Config:
-        schema_extra = {
-            "example": {
-                "name": "Siddhartha",
-                "age": 23,
-                "address": {"city": "Jalaun", "country": "India"},
-            }
-        }
+
+class AddressOptional(BaseModel):
+    city: Optional[str] = None
+    country: Optional[str] = None
+
+
+class StudentUpdate(BaseModel):
+    name: Optional[str] = None
+    age: Optional[int] = None
+    address: Optional[AddressOptional] = None
 
 
 class StudentCreateResponse(BaseModel):

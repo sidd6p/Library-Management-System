@@ -1,6 +1,8 @@
 from fastapi import FastAPI, status
 from . import schemas, utils
 from typing import List
+from typing import Optional
+
 
 app = FastAPI()
 
@@ -36,11 +38,13 @@ async def student_by_id(id: int):
     response_model=schemas.StudentCreateResponse,
 )
 async def put_students(student: schemas.StudentCreate):
-    return {"id": "Hello Earth"}
+    id = utils.add_student(student)
+    return id
 
 
-@app.patch("/students/{id}", status_code=status.HTTP_200_OK)
-async def update_student_by_id(id: int):
+@app.patch("/students/{id}", status_code=status.HTTP_204_NO_CONTENT)
+async def update_student_by_id(id: int, student: Optional[schemas.StudentUpdate]):
+    update_status = utils.update_by_id(id, student)
     return {"message": "Hello Earth"}
 
 

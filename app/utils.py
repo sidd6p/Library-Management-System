@@ -17,3 +17,12 @@ def search_students_by_id(id):
         "address": {"city": "Jalaun", "country": "India"},
     }
     return dummy_data
+
+
+def add_student(student):
+    dummy_data = {"id": "123"}
+    return dummy_data
+
+
+def update_by_id(id, student):
+    return True
