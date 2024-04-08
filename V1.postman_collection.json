@@ -1,0 +1,160 @@
+{
+	"info": {
+		"_postman_id": "ae942ddf-abcf-4623-a910-5a2d2ec8959c",
+		"name": "V1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25064118",
+		"_collection_link": "https://www.postman.com/science-geologist-6321970/workspace/library-management-system/collection/25064118-ae942ddf-abcf-4623-a910-5a2d2ec8959c?action=share&source=collection_link&creator=25064118"
+	},
+	"item": [
+		{
+			"name": "Create Student",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"User1\",\r\n    \"age\": 12,\r\n    \"address\": {\r\n        \"city\": \"Place1\",\r\n        \"country\": \"Country1\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/students",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"students"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update by ID",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"updated_user1\",\r\n    \"age\": 22,\r\n    \"address\": {\r\n        \"city\": \"Place2\"\r\n        }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/students/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"students",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Siddhartha\",\r\n    \"age\": 23,\r\n    \"address\": {\r\n        \"city\": \"Jalaun\", \r\n        \"country\": \"India\"\r\n        }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/students?age=25&country=Country1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"students"
+					],
+					"query": [
+						{
+							"key": "age",
+							"value": "25"
+						},
+						{
+							"key": "country",
+							"value": "Country1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get by ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Siddhartha\",\r\n    \"age\": 23,\r\n    \"address\": {\r\n        \"city\": \"Jalaun\", \r\n        \"country\": \"India\"\r\n        }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/students/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"students",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete by ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Siddhartha\",\r\n    \"age\": 23,\r\n    \"address\": {\r\n        \"city\": \"Jalaun\", \r\n        \"country\": \"India\"\r\n        }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/students/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"students",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
