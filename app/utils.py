@@ -1,4 +1,4 @@
-from .schemas import StudentSearchResponse
+from .schemas import StudentsSearchResponse
 
 
 def search_students(country, age):
@@ -7,4 +7,13 @@ def search_students(country, age):
         {"name": "Alice", "age": 22},
         {"name": "Bob", "age": 25},
     ]
-    return [StudentSearchResponse(**student) for student in dummy_data]
+    return [StudentsSearchResponse(**student) for student in dummy_data]
+
+
+def search_students_by_id(id):
+    dummy_data = {
+        "name": "Siddhartha",
+        "age": 25,
+        "address": {"city": "Jalaun", "country": "India"},
+    }
+    return dummy_data

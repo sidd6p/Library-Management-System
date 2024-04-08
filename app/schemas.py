@@ -1,23 +1,26 @@
 from pydantic import BaseModel
 
 
-class Address(BaseModel):
-    city: str
-    country: str
-
-
 class StudentBaseModel(BaseModel):
     name: str
     age: int
 
 
-class StudentSearchResponse(StudentBaseModel):
+class StudentsSearchResponse(StudentBaseModel):
     pass
 
 
+class Address(BaseModel):
+    city: str
+    country: str
+
+
+class SingleStudentSearchResponse(StudentBaseModel):
+    address: Address
+
+
 class StudentCreate(StudentBaseModel):
-    name: str
-    age: int
+    address: Address
 
     class Config:
         schema_extra = {

@@ -13,16 +13,21 @@ async def root():
 @app.get(
     "/students",
     status_code=status.HTTP_200_OK,
-    response_model=List[schemas.StudentSearchResponse],
+    response_model=List[schemas.StudentsSearchResponse],
 )
 async def get_students(country: str = None, age: int = None):
     students = utils.search_students(country, age)
     return students
 
 
-@app.get("/students/{id}", status_code=status.HTTP_200_OK)
+@app.get(
+    "/students/{id}",
+    status_code=status.HTTP_200_OK,
+    response_model=schemas.SingleStudentSearchResponse,
+)
 async def student_by_id(id: int):
-    return {"message": "Hello Earth"}
+    student = utils.search_students_by_id(id)
+    return student
 
 
 @app.post(
