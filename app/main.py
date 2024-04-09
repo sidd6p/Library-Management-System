@@ -6,7 +6,10 @@ from typing import Optional
 
 from pymongo.database import Database
 
-app = FastAPI()
+app = FastAPI(
+    title="Backend Intern Hiring Task",
+    description="You have to implement these APIs in FastAPI and MongoDB tech stack as mentioned on your problem statement document.",
+)
 
 
 @app.post(
