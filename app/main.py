@@ -101,6 +101,7 @@ async def fetch_student(
     status_code=status.HTTP_204_NO_CONTENT,
     description="API to update the student's properties based on information provided. Not mandatory that all information would be sent in PATCH, only what fields are sent should be updated in the Database.",
     summary="Update a student by ID",
+    response_model=None,
 )
 async def update_student(
     id: str,
@@ -114,6 +115,8 @@ async def update_student(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail=result["detail"],
             )
+        else:
+            return {}
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -121,10 +124,7 @@ async def update_student(
         )
 
 
-@app.delete(
-    "/students/{id}",
-    status_code=status.HTTP_200_OK,
-)
+@app.delete("/students/{id}", status_code=status.HTTP_200_OK, response_model=dict)
 async def delete_student(id: str, db: Database = Depends(get_db)):
     try:
         result = await utils.delete_by_id(id, db)
@@ -133,6 +133,8 @@ async def delete_student(id: str, db: Database = Depends(get_db)):
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=result["detail"],
             )
+        else:
+            return {}
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
