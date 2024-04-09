@@ -13,7 +13,6 @@
 
 ## Run Locally
 
-
 - Clone the project
 
 ```bash
@@ -34,6 +33,25 @@
   uvicorn app.main:app --host 0.0.0.0 --port 8000                                 
 ```
 
+## Run using Dockrer
+
+
+- Clone the project
+
+```bash
+   https://github.com/sidd6p/Library-Management-System.git
+```
+
+- Go to the Post-AP directory
+```bash
+   cd Library-Management-System
+```
+
+- Build & Run docker
+```bash 
+   docker build -t library-management-system .
+   docker run -p 8000:8000 library-management-system:latest
+```
 
 ## Tech Used:
 __Backend__: FastAPI Python
