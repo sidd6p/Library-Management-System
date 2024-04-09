@@ -1,7 +1,7 @@
 # Library-Management-System
 
 
-🌐 __[Live Sever](http://146.190.115.182/docs)__
+🌐 __[Live Sever](http://16.171.11.253/docs#/)__
 
 📬 __[Postman Workspace](https://www.postman.com/science-geologist-6321970/workspace/library-management-system/environment/25064118-9d1e4740-2cb1-465e-b586-05f0ae413176)__
 
